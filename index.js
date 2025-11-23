@@ -115,7 +115,7 @@ function showResults(parent, lists, modeLabel){
     return p;
   }
 
-  const p1 = makePanel('Efficace (x2 ou x4)', lists.forces);
+  const p1 = makePanel('Super Efficace (x2 ou x4)', lists.forces);
   const p2 = makePanel('Peu Efficace/Immunisé (x0, x0.25, x0.5)', lists.weaknesses);
   const p3 = makePanel('Neutre (x1)', lists.neutral);
 
@@ -156,8 +156,12 @@ function defenseSingleMode(root){
     const forces = [], weaknesses = [], neutral = [];
     TYPES.forEach(att => {
       const m = getMultiplier(att, type);
-      if(m === 0 || m === 0.5) forces.push({type:att, mult: m===0 ? 'x0' : 'x0.5'});
-      else if(m === 2) weaknesses.push({type:att, mult:'x2'});
+      
+      // LOGIQUE INVERSÉE POUR LA DÉFENSE (Single)
+      // Dégâts reçus x2 (Faiblesse) -> vont dans 'weaknesses' (Panneau Peu Efficace/Immunisé)
+      if(m === 2) weaknesses.push({type:att, mult:'x2'});
+      // Dégâts reçus x0, x0.5 (Résistance/Immunité) -> vont dans 'forces' (Panneau Super Efficace)
+      else if(m === 0 || m === 0.5) forces.push({type:att, mult: m===0 ? 'x0' : 'x0.5'});
       else neutral.push({type:att, mult:'x1'});
     });
     showResults(root, {forces, weaknesses, neutral}, 'defense-single');
@@ -180,16 +184,19 @@ function defenseDoubleMode(root){
         const m1 = getMultiplier(att, first);
         const m2 = getMultiplier(att, second);
         const mult = +(m1 * m2); // numeric
-        // classify: note que pour combinaisons on peut obtenir 0, 0.25, 0.5, 1, 2, 4
-        if(mult === 0 || mult === 0.5 || mult === 0.25){
+        
+      // LOGIQUE INVERSÉE POUR LA DÉFENSE (Double)
+        // Dégâts reçus x2, x4 (Faiblesses) -> vont dans 'weaknesses' (Panneau Peu Efficace/Immunisé)
+        if(mult === 2 || mult === 4){
+          let label = mult === 4 ? 'x4' : 'x2';
+          weaknesses.push({type:att, mult:label});
+        // Dégâts reçus x0, x0.25, x0.5 (Résistances/Immunité) -> vont dans 'forces' (Panneau Super Efficace)
+        } else if(mult === 0 || mult === 0.5 || mult === 0.25){
           let label = 'x' + mult;
           if(mult === 0.5) label = 'x0.5';
           if(mult === 0.25) label = 'x0.25';
           if(mult === 0) label = 'x0';
           forces.push({type:att, mult:label});
-        } else if(mult === 2 || mult === 4){
-          let label = mult === 4 ? 'x4' : 'x2';
-          weaknesses.push({type:att, mult:label});
         } else {
           neutral.push({type:att, mult:'x1'});
         }
