@@ -2,13 +2,13 @@
 
 // ---------- Données ----------
 const TYPES = [
-  'Normal','Feu','Eau','Électrik','Plante','Glace','Combat','Poison','Sol','Vol',
+  'Normal','Feu','Plante','Eau','Électrik','Glace','Combat','Poison','Sol','Vol',
   'Psy','Insecte','Roche','Spectre','Dragon','Ténèbres','Acier','Fée'
 ];
 
 const TYPE_CHART = {
   Normal: { Roche:0.5, Acier:0.5, Spectre:0 },
-  Plante: { Eau:2, Sol:2, Roche:2, Plante:0.5, Feu:0.5, Poison:0.5, Vol:0.5, Insecte:0.5, Dragon:0.5 Acier:0.5 },
+  Plante: { Eau:2, Sol:2, Roche:2, Plante:0.5, Feu:0.5, Poison:0.5, Vol:0.5, Insecte:0.5, Dragon:0.5, Acier:0.5 },
   Feu: { Plante:2, Glace:2, Insecte:2, Acier:2, Feu:0.5, Eau:0.5, Roche:0.5, Dragon:0.5 },
   Eau: { Feu:2, Sol:2, Roche:2, Plante:0.5, Eau:0.5, Dragon:0.5 },
   Électrik: { Eau:2, Vol:2, Plante:0.5, Électrik:0.5, Dragon:0.5, Sol:0 },
